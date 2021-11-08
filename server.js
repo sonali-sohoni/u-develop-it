@@ -22,6 +22,25 @@ const db = mysql.createConnection(
 	console.log("database connected successfully")
 );
 
+db.query("select * from candidates where id =1", (err, rows) => {
+	console.log(rows);
+});
+
+// db.query(`delete from candidates where id = ?`, 1, (err, result) => {
+// 	if (err) {
+// 		console.log(err);
+// 	} else {
+// 		console.log(result);
+// 	}
+// });
+
+const insertsql = `insert into candidates (id,first_name,last_name,industry_connected ) values (?,?,?,?)`;
+const params = [1, "Ronald", "Firbank", 1];
+db.query(insertsql, params, (err, result) => {
+	if (err) console.log(err);
+	else console.log(result);
+});
+
 app.use((req, res) => {
 	res.status(404).end();
 });
