@@ -4,5 +4,5 @@ const partyRoutes = require("./partyRoutes");
 const voterRoutes = require("./voterRoutes");
 router.use(candidateRoutes);
 router.use(partyRoutes);
-//router.use(voterRoutes);
+router.use(voterRoutes);
 module.exports = router;
