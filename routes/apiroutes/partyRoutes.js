@@ -1,25 +1,7 @@
-//initialize express
-const express = require("express");
-const PORT = process.env.PORT || 3001;
-const app = express();
+const router = require("express").Router();
+const db = require("../../db/connection");
 
-//connect to mysql
-const mysql = require("mysql2");
-const inputCheck = require("./utils/inputCheck");
-const db = require("./db/connection");
-const apiroutes = require("./routes/apiroutes")
-//middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use("/api", apiroutes);
-
-
-
-//api endpoint to get all candidates
-
-//api for parties
-
-app.get("/api/parties", (req, res) => {
+router.get("/parties", (req, res) => {
 	const sql = `select * from parties`;
 	db.query(sql, (err, rows) => {
 		if (err) {
@@ -30,7 +12,7 @@ app.get("/api/parties", (req, res) => {
 	});
 });
 
-app.get("/api/party/:id", (req, res) => {
+router.get("/party/:id", (req, res) => {
 	const sql = `select * from parties where id = ?`;
 	const params = [req.params.id];
 	db.query(sql, params, (err, result) => {
@@ -42,7 +24,7 @@ app.get("/api/party/:id", (req, res) => {
 	});
 });
 
-app.delete("/api/party/:id", (req, res) => {
+router.delete("/party/:id", (req, res) => {
 	const sql = `delete from parties where id = ?`;
 	const params = [req.params.id];
 	db.query(sql, params, (err, result) => {
@@ -61,14 +43,4 @@ app.delete("/api/party/:id", (req, res) => {
 		}
 	});
 });
-
-//
-
-//middleware to report 404 -page not found for the unhandled requests
-app.use((req, res) => {
-	res.status(404).end();
-});
-
-app.listen(PORT, () => {
-	console.log(`Server is listening to port ${PORT}`);
-});
+module.exports = router;
