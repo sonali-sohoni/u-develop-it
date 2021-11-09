@@ -17,3 +17,13 @@ id INTEGER AUTO_INCREMENT PRIMARY KEY,
   industry_connected BOOLEAN NOT NULL
   constraint fk_party foreign key (party_id) references parties(id)) on delete set null
 );
+
+drop table if exists voters;
+
+create table voters(
+id integer auto_increment primary key,
+first_name varchar(30) not null,
+last_name varchar(30) not null,
+email varchar(50) not null,
+created_at datetime default CURRENT_TIMESTAMP
+);
