@@ -115,6 +115,80 @@ app.delete("/api/candidate/:id", (req, res) => {
 	});
 });
 
+//api for update candidate table
+
+app.put("/api/candidate/:id", (req, res) => {
+	const errors = inputCheck(req.body, "party_id");
+
+	if (errors) {
+		res.status(400).json({ error: errors });
+		return;
+	}
+	const sql = `update candidates set party_id = ? where id = ?`;
+	const params = [req.body.party_id, req.params.id];
+	db.query(sql, params, (err, result) => {
+		if (err) {
+			res.status(400).json({ error: err.message });
+			return;
+		} else if (!result.affectedRows) {
+			res.json({ message: "candidate not found" });
+		} else {
+			res.json({
+				message: "success",
+				data: req.body,
+				changes: result.affectedRows,
+			});
+		}
+	});
+});
+
+//api for parties
+
+app.get("/api/parties", (req, res) => {
+	const sql = `select * from parties`;
+	db.query(sql, (err, rows) => {
+		if (err) {
+			res.status(500).json({ error: err.message });
+			return;
+		}
+		res.json({ message: "success", data: rows });
+	});
+});
+
+app.get("/api/party/:id", (req, res) => {
+	const sql = `select * from parties where id = ?`;
+	const params = [req.params.id];
+	db.query(sql, params, (err, result) => {
+		if (err) {
+			res.status(400).json({ error: err.message });
+			return;
+		}
+		res.json({ message: "success", data: result });
+	});
+});
+
+app.delete("/api/party/:id", (req, res) => {
+	const sql = `delete from parties where id = ?`;
+	const params = [req.params.id];
+	db.query(sql, params, (err, result) => {
+		if (err) {
+			res.status(400).json({ error: err.message });
+		} else if (!result.affectedRows) {
+			res.json({
+				message: "party not found",
+			});
+		} else {
+			res.json({
+				message: "deleted",
+				changes: result.affectedRows,
+				id: req.params.id,
+			});
+		}
+	});
+});
+
+//
+
 //middleware to report 404 -page not found for the unhandled requests
 app.use((req, res) => {
 	res.status(404).end();
